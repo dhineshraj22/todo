@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>To-Do List</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <h1>My To-Do List</h1>
+
+  <form action="/add" method="POST">
+    <input type="text" name="task" placeholder="Add a new task..." required>
+    <button type="submit">Add</button>
+  </form>
+
+  <ul>
+    {% for task in tasks %}
+    <li>
+      <span class="{{ 'done' if task.done }}">{{ task.task }}</span>
+      <a href="/done/{{ loop.index0 }}">✅</a>
+      <a href="/remove/{{ loop.index0 }}">🗑️</a>
+    </li>
+  {% endfor %}
+  
+  </ul>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="popup">
+        {% for category, message in messages %}
+          <div class="message {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      <script>
+        setTimeout(() => {
+          document.querySelector('.popup').style.display = 'none';
+        }, 3000);
+      </script>
+    {% endif %}
+  {% endwith %}
+</body>
+</html>
